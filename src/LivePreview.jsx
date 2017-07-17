@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Editor from './Editor';
 
@@ -13,9 +14,9 @@ class LivePreview extends React.Component {
 			code: props.code
 		}
 		this.defaultPreviewStyle = {
-			position:"relative", 
-			height:200, 
-			padding:10, 
+			position:"relative",
+			height:200,
+			padding:10,
 			border:"2px solid #CCC"
 		}
 		this.updateCode = this.updateCode.bind(this);
@@ -127,4 +128,10 @@ class LivePreview extends React.Component {
 	}
 }
 
-module.exports = LivePreview;
+LivePreview.propTypes = {
+	components: PropTypes.arrayOf(PropTypes.element),
+	code: PropTypes.string,
+	onChange: PropTypes.func
+};
+
+export default  LivePreview;
