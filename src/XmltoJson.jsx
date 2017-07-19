@@ -3,7 +3,7 @@ import _ from 'lodash';
 class XmltoJson{
     parse(aXmlStr){
         var str = this.checkEmptyValAttr(aXmlStr);
-        console.log(str);
+        //console.log("XML before parse: ", str);
         var parser, xmlDoc;
         if (window.DOMParser) {
             parser = new DOMParser();
@@ -67,17 +67,14 @@ class XmltoJson{
         var regexAttr = /((?:\s[a-zA-Z0-9\-\_]+\b(?!\=)))/g;
         var curlyBracket = /\=\{([\w\s\"\'\-\_\@\#\$\%\^\&\*\(\)\+\=\[\]\:\;]+)\}/g
         var newStr = _.replace(str, regexTag, function(matchStr, c1, c2, index){
-            var mm =  _.replace(matchStr, curlyBracket, function(m1, s){
+            return  _.replace(matchStr, curlyBracket, function(m1, s){
                 var val = eval(s);
                 if (typeof val === "string") {
                     return '="' + val + '"';
                 }else{
                     return '="' + JSON.stringify(val) + '"';
                 }
-            })
-            return _.replace(mm, regexAttr, function(m1, cc1){
-                return cc1 += '=""';
-            })
+            });
         });
         return newStr;
     }
