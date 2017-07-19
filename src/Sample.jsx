@@ -18,9 +18,9 @@ class Sample extends React.Component {
 		return (
 			<div className="container">
 				<h1>React Bootstrap Component Preview</h1>
-				<LivePreview 
+				<LivePreview
 				previewStyle={{height:150}}
-				components={this.components} 
+				components={this.components}
 				code='<Button bsStyle="primary">Primary</Button>' />
 			</div>
 		);
