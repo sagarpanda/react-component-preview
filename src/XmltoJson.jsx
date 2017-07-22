@@ -68,7 +68,12 @@ class XmltoJson{
         var curlyBracket = /\=\{([\w\s\"\'\-\_\@\#\$\%\^\&\*\(\)\+\=\[\]\:\;]+)\}/g
         var newStr = _.replace(str, regexTag, function(matchStr, c1, c2, index){
             return  _.replace(matchStr, curlyBracket, function(m1, s){
-                var val = eval(s);
+                var val = null;
+                try {
+                    val = eval(s);
+                } catch (e) {
+                    val = "";
+                }
                 if (typeof val === "string") {
                     return '="' + val + '"';
                 }else{
