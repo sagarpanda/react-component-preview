@@ -1,4 +1,4 @@
-# React Component Review
+# React Component Preview
 [Click here to see the demo.](https://sagarpanda.github.io/react-component-preview/)
 ### NPM Installation
 ```sh
