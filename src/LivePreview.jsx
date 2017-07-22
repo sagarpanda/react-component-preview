@@ -14,7 +14,7 @@ class LivePreview extends React.Component {
 		}
 		this.defaultPreviewStyle = {
 			position:"relative",
-			height:200,
+			minHeight:200,
 			padding:10,
 			border:"2px solid #CCC"
 		}
@@ -43,6 +43,9 @@ class LivePreview extends React.Component {
 		var regx = /^[A-Z]/; var children = [];
 
 		if(_.isString(aOpt)){ return aOpt; }
+        if (aOpt.name === "parsererror") {
+            return "";
+        }
 
 		var component = aOpt.name;
 		if (regx.test(aOpt.name)) {
