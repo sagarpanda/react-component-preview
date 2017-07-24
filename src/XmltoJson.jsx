@@ -63,7 +63,7 @@ class XmltoJson{
     }
 
     checkEmptyValAttr(str){
-        var regexTag = /\<([\w\s\=\"\#\!\@\$\%\^\&\*\(\)\_\-\+\~\`\{\}\[\]\:\;\'\\\|]+)(\>|\/\>)/g;
+        var regexTag = /\<([\w\s\=\"\#\!\@\$\%\^\&\*\(\)\_\-\+\~\`\{\}\[\]\:\;\'\\\|\/]+)(\>|\/\>)/g;
         var regexAttr = /((?:\s[a-zA-Z0-9\-\_]+\b(?!\=)))/g;
         var curlyBracket = /\=\{([\w\s\"\'\-\_\@\#\$\%\^\&\*\(\)\+\=\[\]\:\;]+)\}/g
         var newStr = _.replace(str, regexTag, function(matchStr, c1, c2, index){
