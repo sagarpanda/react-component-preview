@@ -4,6 +4,8 @@ import _ from 'lodash';
 import Editor from './Editor';
 import XmltoJson from './XmltoJson';
 
+const noop = () => {};
+
 class LivePreview extends React.Component {
     constructor(props) {
         super(props);
@@ -24,7 +26,7 @@ class LivePreview extends React.Component {
     componentWillReceiveProps(newProps) {
         this.components = newProps.components;
         this.setState({
-            code: props.code
+            code: newProps.code
         });
     }
 
@@ -33,15 +35,14 @@ class LivePreview extends React.Component {
     }
 
     updateCode(val) {
-        console.log('updateCode: ', arguments);
         this.setState({ code: val });
     }
 
     createElement(aOpt) {
-        var self = this,
-            rComp;
-        var regx = /^[A-Z]/;
-        var children = [];
+        const self = this;
+        let rComp = null;
+        const regx = /^[A-Z]/;
+        const children = [];
 
         if (_.isString(aOpt)) {
             return aOpt;
@@ -50,16 +51,17 @@ class LivePreview extends React.Component {
             return '';
         }
 
-        var component = aOpt.name;
+        let component = aOpt.name;
         if (regx.test(aOpt.name)) {
-            component = this.components[aOpt.name];
-            if (!component) {
+            component = _.at(this.components, aOpt.name);
+            if (component.length === 0) {
                 return '';
+            }else{
+                component = component[0];
             }
         }
 
         if (_.isArray(aOpt.children)) {
-            var temp = null;
             //console.log("In Array: ", extract);
             aOpt.children.forEach(function(aNode) {
                 children.push(self.createElement(aNode));
@@ -79,8 +81,7 @@ class LivePreview extends React.Component {
     }
 
     componentParser(aStr) {
-        //var json = this.xml2json.xml_str2json(aStr);
-        var json = this.xmltojson.parse(aStr);
+        const json = this.xmltojson.parse(aStr);
         if (json) {
             //console.log(JSON.stringify(json, null, 2));
             return this.createElement(json);
@@ -90,24 +91,53 @@ class LivePreview extends React.Component {
 
     render() {
         //console.log("render: ", this.xml2json);
-        var comp = this.componentParser(this.state.code);
-        var previewStyle = this.props.previewStyle || {};
-        previewStyle = _.assign({}, this.defaultPreviewStyle, previewStyle);
+        const {
+            components,
+            code,
+            previewStyle,
+            enableEditor,
+            ...props
+        } = this.props;
+        let comp = null;
+        try {
+            comp = this.componentParser(this.state.code);
+        } catch (e) {
+            comp = '';
+        }
+        const previewStyleAttr = _.assign(
+            {},
+            this.defaultPreviewStyle,
+            previewStyle
+        );
         return (
-            <div>
-                <div style={previewStyle}>
+            <div {...props}>
+                <div className="preview" style={previewStyleAttr}>
                     {comp}
                 </div>
-                <Editor value={this.state.code} onChange={this.updateCode} />
+                {this.props.enableEditor
+                    ? <Editor
+                          value={this.state.code}
+                          onChange={this.updateCode}
+                      />
+                    : ''}
             </div>
         );
     }
 }
 
+LivePreview.defaultProps = {
+    enableEditor: true,
+    code: '',
+    previewStyle: {},
+    onChange: noop
+};
+
 LivePreview.propTypes = {
     components: PropTypes.object,
     code: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    previewStyle: PropTypes.object,
+    enableEditor: PropTypes.bool
 };
 
 export default LivePreview;

@@ -1,6 +1,7 @@
 import React from 'react';
 import brace from 'brace';
 import AceEditor from 'react-ace';
+import PropTypes from 'prop-types';
 import 'brace/mode/xml';
 import 'brace/mode/java';
 import 'brace/theme/monokai';
@@ -19,7 +20,7 @@ class Editor extends React.Component {
     }
 
     shouldComponentUpdate() {
-        return false;
+        return true;
     }
 
     render() {
@@ -47,4 +48,4 @@ class Editor extends React.Component {
     }
 }
 
-module.exports = Editor;
+export default Editor;
