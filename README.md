@@ -19,6 +19,7 @@ import Preview from 'react-component-preview';
 | code | string|
 | components | object |
 | previewStyle | object | { minHeight: 200 }
+| enableEditor | Boolean | true | Show and hide the editor
 
 ### Source Code Run
 
