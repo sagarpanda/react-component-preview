@@ -1,6 +1,6 @@
 {
   "name": "react-component-preview",
-  "version": "2.1.0",
+  "version": "2.3.0",
   "description": "View your react component with editable source in browser.",
   "main": "./lib/LivePreview.js",
   "scripts": {
