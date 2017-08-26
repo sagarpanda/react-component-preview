@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import assign from 'lodash/assign';
 import Editor from './Editor';
-import XmltoJson from './XmltoJson';
+const JSXTransformer = require('./JSXTransformer');
 
 const noop = () => {};
 
@@ -31,66 +31,19 @@ class LivePreview extends React.Component {
     }
 
     componentWillMount() {
-        this.xmltojson = new XmltoJson();
+        window.JSXTransformer = JSXTransformer;
+        window.React = React;
+        const cKeys = Object.keys(this.components);
+        for (var i = 0; i < cKeys.length; i++) {
+            window[cKeys[i]] = this.components[cKeys[i]];
+        }
     }
 
     updateCode(val) {
         this.setState({ code: val });
     }
 
-    createElement(aOpt) {
-        const self = this;
-        let rComp = null;
-        const regx = /^[A-Z]/;
-        const children = [];
-
-        if (_.isString(aOpt)) {
-            return aOpt;
-        }
-        if (aOpt.name === 'parsererror') {
-            return '';
-        }
-
-        let component = aOpt.name;
-        if (regx.test(aOpt.name)) {
-            component = _.at(this.components, aOpt.name);
-            if (component.length === 0) {
-                return '';
-            }else{
-                component = component[0];
-            }
-        }
-
-        if (_.isArray(aOpt.children)) {
-            //console.log("In Array: ", extract);
-            aOpt.children.forEach(function(aNode) {
-                children.push(self.createElement(aNode));
-            });
-            children.unshift(aOpt.props);
-            children.unshift(component);
-            try {
-                rComp = React.createElement.apply(React, children);
-            } catch (e) {
-                rComp = '';
-            } finally {
-            }
-            return rComp;
-        } else {
-            return '';
-        }
-    }
-
-    componentParser(aStr) {
-        const json = this.xmltojson.parse(aStr);
-        if (json) {
-            //console.log(JSON.stringify(json, null, 2));
-            return this.createElement(json);
-        }
-        return '';
-    }
-
     render() {
-        //console.log("render: ", this.xml2json);
         const {
             components,
             code,
@@ -100,11 +53,12 @@ class LivePreview extends React.Component {
         } = this.props;
         let comp = null;
         try {
-            comp = this.componentParser(this.state.code);
+            comp = JSXTransformer.exec(this.state.code);
         } catch (e) {
+            console.log(e.description || e.message);
             comp = '';
         }
-        const previewStyleAttr = _.assign(
+        const previewStyleAttr = assign(
             {},
             this.defaultPreviewStyle,
             previewStyle
